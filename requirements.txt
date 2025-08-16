@@ -1,0 +1,4 @@
+pinecone
+groq
+dotenv
+requests
