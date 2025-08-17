@@ -2,6 +2,7 @@ import os
 import nltk
 from typing import List
 
+
 nltk.download('punkt')
 
 def read_and_chunk_sentences(

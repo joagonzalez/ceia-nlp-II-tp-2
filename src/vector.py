@@ -1,8 +1,9 @@
-from pinecone import Pinecone
-from settings import PINECONE_API_KEY
-import time
 import sys
-from chunk import read_and_chunk_sentences
+import time
+from pinecone import Pinecone
+from src.chunk import read_and_chunk_sentences
+from src.config.settings import PINECONE_API_KEY
+
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
@@ -12,7 +13,7 @@ dense_index = pc.Index(index_name)
 LOAD_DATA = False
 
 if LOAD_DATA:
-    chunks = read_and_chunk_sentences("cv1.txt", chunk_size=5, overlap=2)
+    chunks = read_and_chunk_sentences("data/cv1.txt", chunk_size=5, overlap=2)
     
     cvs = []
     
