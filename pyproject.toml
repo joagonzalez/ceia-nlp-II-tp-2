@@ -1,0 +1,15 @@
+[project]
+name = "ceia-nlp-ii-tp-2"
+version = "0.1.0"
+description = "Chatbot using vector databases and LLMs to enhance responses about Cvitae."
+authors = [{name = "Joaquin Gonzalez", email = "joagonzalez@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "dotenv>=0.9.9",
+    "groq>=0.31.0",
+    "httpx>=0.28.1",
+    "nltk>=3.9.1",
+    "pinecone>=7.3.0",
+    "requests>=2.32.4",
+]

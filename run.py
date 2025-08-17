@@ -1,8 +1,10 @@
-from groq import Groq
-from settings import GROQ_API_KEY
-from settings import PINECONE_API_KEY
 import sys
-from vector import search_similar
+from groq import Groq
+from src.vector import search_similar
+from src.config.settings import GROQ_API_KEY
+from src.config.settings import PINECONE_API_KEY
+
+
 
 client = Groq(api_key=GROQ_API_KEY)
 
