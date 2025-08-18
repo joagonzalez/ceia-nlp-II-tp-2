@@ -5,28 +5,17 @@ run:
 	uv run run.py
 
 typehint:
-	uv run mypy src/ tests/
-
-test-local:
-	uv run pytest tests/ -v --cov
-
-test:
-	uv run pytest tests/ -v --cov --cov-report=xml:coverage.xml
+	uv run mypy src/
 
 lint:
-	uv run ruff check src/ tests/ 
+	uv run ruff check src/
 
 format:
-	uv run ruff check src/ tests/ --fix
+	uv run ruff check src/ --fix
 
 clean:
 	rm -rf .*_cache coverage.xml .*coverage site report
 
-checklist: typehint lint test clean
-
 code-quality: typehint lint clean
-
-coverage-publish:
-	uv run coveralls
 
 .PHONY: checklist

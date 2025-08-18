@@ -9,7 +9,9 @@ dependencies = [
     "dotenv>=0.9.9",
     "groq>=0.31.0",
     "httpx>=0.28.1",
+    "mypy>=1.17.1",
     "nltk>=3.9.1",
     "pinecone>=7.3.0",
     "requests>=2.32.4",
+    "ruff>=0.12.9",
 ]
