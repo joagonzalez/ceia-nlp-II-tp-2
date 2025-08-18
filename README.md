@@ -1,27 +1,179 @@
-# ceia-nlp-II-tp-2
-TP2 de la materia Procesamiento de Lenguaje Natural 2 de la carrera de esecialización en Inteligencia Artificial
+# CV Chatbot - RAG System
 
-TP1:
-• Implementar un sistema de generación de texto (chatbot) que 
-utilice la técnica de Retrieval-Augmented Generation (RAG). En 
-este ejercicio, el chatbot será capaz de recuperar información de 
-una base de datos (o un conjunto de documentos) y usarla para 
-generar respuestas más completas, mejorando la calidad de las 
-respuestas generadas.
-• Entregables: Link a repo público y captura de video de chatbot
-consultando al CV del alumno. Utilizar librería como Streamlit
-(para capturar pantalla se puede utilizar OBS por ejemplo, es open 
-source).  Link entregar: https://forms.gle/roAtRx2rXawaftjm7
-• Se evalúa el código y la presentación (Repo con documentación).
+Sistema de generación de texto (chatbot) que utiliza la técnica de **Retrieval-Augmented Generation (RAG)** para responder consultas sobre currículums vitae. El chatbot es capaz de recuperar información de una base de datos vectorial y usarla para generar respuestas más completas y precisas.
+
+<img src="doc/ui.png" width="55%" />
+
+## 📚 Tabla de Contenidos
+
+- [🚀 Características](#🚀-características)
+- [📄 Pipelines](#📄-pipelines)
+- [🛠️ Tecnologías Utilizadas](#🛠️-tecnologías-utilizadas)
+- [📋 Prerrequisitos](#📋-prerrequisitos)
+- [🎯 Getting Started](#🎯-getting-started)
+  - [1. Clonar el repositorio](#1-clonar-el-repositorio)
+  - [2. Configurar variables de entorno](#2-configurar-variables-de-entorno)
+  - [3. Instalar dependencias](#3-instalar-dependencias)
+  - [4. Ejecutar la aplicación](#4-ejecutar-la-aplicación)
+- [📁 Estructura del Proyecto](#📁-estructura-del-proyecto)
+- [💡 Uso](#💡-uso)
+- [🔧 Comandos Disponibles](#🔧-comandos-disponibles)
+- [📖 Consigna Original](#📖-consigna-original)
+- [🤝 Contribución](#🤝-contribución)
+- [📧 Contacto](#📧-contacto)
+
+## 🚀 Características
+
+- **Interfaz web moderna** desarrollada con Dash y Bootstrap
+- **Sistema RAG** implementado con Pinecone y embeddings
+- **Modelo de lenguaje** integrado con Groq
+- **Búsqueda semántica** para recuperar contexto relevante
+- **Respuestas en español** optimizadas para análisis de CVs
+- **Visualización del contexto** usado para generar cada respuesta
+
+## 📄 Pipelines
+
+El flujo principal del chat inicia cuando el usuario envía una consulta a través de la interfaz web. La aplicación procesa la pregunta y utiliza técnicas de búsqueda semántica para identificar los fragmentos de contexto más relevantes almacenados en la base de datos vectorial **Pinecone**. Estos fragmentos (*contexto*) se combinan y se envían junto con la consulta original al modelo de lenguaje integrado con **Groq**, que genera una respuesta optimizada. El historial de las preguntas y respuestas se mantiene en una lista que hace de gestion de memoria. Finalmente, la respuesta y el contexto utilizado se muestran al usuario.
+
+<img src="doc/app_workflow.png" width="65%" />
 
 
-Pasos
-1. Preparación del entorno de trabajo: contar con IDE, cuenta de 
-Pinecone (Starter), cuenta de Groq.
-2. Cargar los CVs de los miembros del equipo y obtener los vectores 
-de embeddings (ejemplo de modelo de embeddings).
-3. Cargar los vectores a Pinecone.
-4. Probar hacer una pregunta y, por medio de una comparación 
-coseno, obtener el vector más cercano.
-5. Implementar un simple chatbot para obtener respuestas sobre el 
-documento cargado (CV del alumno).
+El proceso de carga comienza con la segmentación (*chunking*) del currículum vitae en fragmentos de texto más pequeños y manejables. Cada fragmento es procesado para obtener su representación vectorial mediante un modelo de embeddings. Estos vectores, junto con metadatos relevantes, se almacenan en la base de datos vectorial (**Pinecone**). El chunking se realiza con la libreria Natural Language Toolkit (NLTK).
+
+<img src="doc/etl_workflow.png" width="65%" />
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Python 3.13**
+- **Dash** - Framework web para la interfaz
+- **Pinecone** - Base de datos vectorial
+- **Groq** - API de modelos de lenguaje
+- **NLTK** - Procesamiento de texto
+- **UV** - Gestor de dependencias
+
+## 📋 Prerrequisitos
+
+Antes de comenzar, asegúrate de tener:
+
+1. **Python 3.10+** instalado
+2. **UV** package manager ([instalación](https://docs.astral.sh/uv/getting-started/installation/))
+3. **Cuenta de Pinecone** (plan Starter gratuito)
+4. **Cuenta de Groq** para acceso a la API
+5. **Variables de entorno** configuradas:
+   ```bash
+   PINECONE_API_KEY=tu_api_key_de_pinecone
+   GROQ_API_KEY=tu_api_key_de_groq
+   ```
+
+## 🎯 Getting Started
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/ceia-nlp-II-tp-2.git
+cd ceia-nlp-II-tp-2
+```
+
+### 2. Configurar variables de entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```bash
+# .env
+PINECONE_API_KEY=tu_api_key_aqui
+GROQ_API_KEY=tu_api_key_aqui
+```
+
+### 3. Instalar dependencias
+
+```bash
+make install
+```
+
+### 4. Ejecutar la aplicación
+
+#### Interfaz Web (recomendado)
+```bash
+make ui
+```
+La aplicación estará disponible en: http://localhost:8050
+
+#### Interfaz de línea de comandos
+```bash
+make run
+```
+
+## 📁 Estructura del Proyecto
+
+```
+├── src/
+│   ├── chatService.py          # Servicio principal del chatbot
+│   ├── vectorService.py        # Manejo de embeddings y Pinecone
+│   └── config/
+│       └── settings.py         # Configuración del sistema
+├── data/
+│   └── cv1.txt                # CV de ejemplo
+├── ui.py                       # Interfaz web con Dash
+├── run.py                      # Interfaz CLI
+├── Makefile                    # Comandos de automatización
+└── requirements.txt            # Dependencias Python
+```
+
+## 💡 Uso
+
+### Interfaz Web
+1. Abre http://localhost:8050 en tu navegador
+2. Utiliza los ejemplos de preguntas o escribe tu propia consulta
+3. Haz clic en "👁️ Ver contexto" para ver el contexto RAG utilizado
+
+### Ejemplos de Preguntas
+- "¿Cuáles son las habilidades técnicas de Martín?"
+- "¿Dónde trabajó Martín anteriormente?"
+- "¿Qué certificaciones tiene Martín?"
+
+## 🔧 Comandos Disponibles
+
+```bash
+make install    # Instalar dependencias
+make ui        # Ejecutar interfaz web
+make run       # Ejecutar interfaz CLI
+make lint      # Linting del código
+make format    # Formatear código
+make clean     # Limpiar archivos temporales
+```
+
+## 📖 Consigna Original
+
+**TP2 - Procesamiento de Lenguaje Natural 2**  
+*Carrera de Especialización en Inteligencia Artificial*
+
+### Objetivos
+• Implementar un sistema de generación de texto (chatbot) que utilice la técnica de Retrieval-Augmented Generation (RAG)
+• El chatbot debe ser capaz de recuperar información de una base de datos y usarla para generar respuestas más completas
+• Mejorar la calidad de las respuestas generadas mediante contexto relevante
+
+### Entregables
+• Link a repositorio público
+• Captura de video del chatbot consultando el CV del alumno
+• Se evalúa el código y la presentación (Repo con documentación)
+
+### Pasos de Implementación
+1. Preparación del entorno: IDE, cuenta de Pinecone (Starter), cuenta de Groq
+2. Cargar los CVs y obtener vectores de embeddings
+3. Cargar los vectores a Pinecone
+4. Implementar búsqueda por similitud coseno
+5. Desarrollar chatbot para consultas sobre el CV
+
+## 🤝 Contribución
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📧 Contacto
+
+Para preguntas o sugerencias, puedes contactar a través de [issues](https://github.com/joagonzalez/ceia-nlp-II-tp-2/issues) del repositorio.
