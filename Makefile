@@ -1,6 +1,8 @@
 install:
 	uv sync
 
+ui:
+	uv run ui.py
 run:
 	uv run run.py
 
