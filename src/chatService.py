@@ -53,7 +53,7 @@ class ChatSession:
     response = ""
     for chunk in completion:
       delta = chunk.choices[0].delta.content or ""
-      print(delta, end="")
+      # print(delta, end="")
       response += delta
     self.add_assistant_message(response)
     print()  # For newline after response
