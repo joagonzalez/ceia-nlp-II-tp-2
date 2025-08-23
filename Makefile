@@ -1,6 +1,9 @@
 install:
 	uv sync
 
+load:
+	uv run load.py
+
 ui:
 	uv run ui.py
 run:

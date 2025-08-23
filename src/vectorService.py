@@ -5,11 +5,9 @@ import time
 from typing import List
 from pinecone import Pinecone
 
-from src.config.settings import DATASET
 from src.config.settings import PINECONE_INDEX
 from src.config.settings import PINECONE_API_KEY
 from src.config.settings import PINECONE_NAMESPACE
-from src.config.settings import PINECONE_LOAD_DATA  
 from src.config.settings import PINECONE_TOPK_SEARCH
 from src.config.settings import PINECONE_EMBEDDING_MODEL
 
@@ -18,7 +16,8 @@ nltk.download('punkt')
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
-dense_index = pc.Index(PINECONE_INDEX)
+# No inicializar dense_index aquí para evitar errores si no existe
+dense_index = None
 
 
 def read_and_chunk_sentences(
@@ -62,6 +61,26 @@ def load_data_into_vectordb(dataset: List[str]):
     Args:
         dataset (List[str]): List of file paths to be processed.
     """
+    global dense_index
+    
+    # Crear índice si no existe
+    if PINECONE_INDEX not in [index.name for index in pc.list_indexes()]:
+        print(f"Index {PINECONE_INDEX} does not exist. Creating it...")
+        pc.create_index_for_model(
+            name=PINECONE_INDEX,
+            cloud="aws",
+            region="us-east-1",
+            embed={
+                "model": PINECONE_EMBEDDING_MODEL,
+                "field_map": {"text": "chunk_text"}
+            }
+        )
+        print(f"Index {PINECONE_INDEX} created successfully.")
+        time.sleep(10)  # Esperar a que se cree
+    
+    # Inicializar dense_index
+    dense_index = pc.Index(PINECONE_INDEX)
+    
     for doc in dataset:
         chunks = read_and_chunk_sentences(doc, chunk_size=5, overlap=2)
         category = "cv"
@@ -73,17 +92,6 @@ def load_data_into_vectordb(dataset: List[str]):
                 "chunk_text": chunk,
                 "category": category
             })
-        
-        if not pc.has_index(PINECONE_INDEX):
-            pc.create_index_for_model(
-                name=PINECONE_INDEX,
-                cloud="aws",
-                region="us-east-1",
-                embed={
-                    "model": PINECONE_EMBEDDING_MODEL,
-                    "field_map":{"text": "chunk_text"}
-                }
-            )
 
         # Upsert the records into a namespace
         dense_index.upsert_records(
@@ -111,6 +119,14 @@ def search_similar(
     Returns:
         List[str]: List of similar items found in the vector database.
     """
+    global dense_index
+    
+    # Inicializar dense_index si es None
+    if dense_index is None:
+        if PINECONE_INDEX not in [index.name for index in pc.list_indexes()]:
+            print(f"Error: El índice '{PINECONE_INDEX}' no existe.")
+            return []
+        dense_index = pc.Index(PINECONE_INDEX)
     
     # View stats for the index
     stats = dense_index.describe_index_stats()

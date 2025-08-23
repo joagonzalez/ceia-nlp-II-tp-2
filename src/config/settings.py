@@ -8,7 +8,7 @@ load_dotenv()
 DATASET = ["cv1.txt"]
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_INDEX = "developer-quickstart-py"
+PINECONE_INDEX = "test"
 PINECONE_LOAD_DATA = False
 PINECONE_EMBEDDING_MODEL = "llama-text-embed-v2"
 PINECONE_NAMESPACE = "example-namespace"
