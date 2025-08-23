@@ -8,7 +8,7 @@ load_dotenv()
 DATASET = ["cv1.txt"]
 
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-PINECONE_INDEX = "test"
+PINECONE_INDEX = "ceia-nlp-cv-chunks-index-tp2"
 PINECONE_LOAD_DATA = False
 PINECONE_EMBEDDING_MODEL = "llama-text-embed-v2"
 PINECONE_NAMESPACE = "example-namespace"
