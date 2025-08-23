@@ -28,7 +28,7 @@ Sistema de generación de texto (chatbot) que utiliza la técnica de **Retrieval
 - Sistema RAG implementado con Pinecone y embeddings
 - Modelo de lenguaje integrado con Groq
 - Búsqueda semántica para recuperar contexto relevante
-- Respuestas en español optimizadas para análisis de CVs
+- Respuestas optimizadas para análisis de CVs
 - Visualización del contexto usado para generar cada respuesta
 
 ## Pipelines
